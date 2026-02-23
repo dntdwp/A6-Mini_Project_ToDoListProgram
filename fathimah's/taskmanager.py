@@ -32,7 +32,7 @@ def edit_task(nomor_task, new_data):
             task.update(new_data)
             save_tasks(tasks)
             return True
-        return False
+    return False
     
 def delete_task(nomor_task):
     """Hapus berdasarkan Nomor Tugas"""
