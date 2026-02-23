@@ -26,10 +26,32 @@ def tambah_tugas(title, deadline, priority):
     return tugas_baru
 
 def edit_task(nomor_task, new_data):
-    """Edit berdasarkan nomor tugas"""
+    """Edit berdasarkan Nomor Tugas"""
     for task in tasks:
         if task["Nomor Tugas"] == nomor_task:
             task.update(new_data)
             save_tasks(tasks)
             return True
         return False
+    
+def delete_task(nomor_task):
+    """Hapus berdasarkan Nomor Tugas"""
+    global tasks
+    tasks = [task for task in tasks if task["Nomor Tugas"] != nomor_task]
+    save_tasks(tasks)
+    return True
+
+
+def mark_done(nomor_task):
+    """Tandai tugas selesai"""
+    for task in tasks:
+        if task["Nomor Tugas"] == nomor_task:
+            task["Status"] = "Selesai"
+            save_tasks(tasks)
+            return True
+    return False
+
+
+def get_all_tasks():
+    """Mengembalikan semua tugas"""
+    return tasks
