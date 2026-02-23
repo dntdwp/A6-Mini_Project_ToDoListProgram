@@ -8,7 +8,7 @@ def nomor_tugas():
     """Beri nomor untuk setiap tugas"""
     if not tasks:
         return 1
-    return max(task["nomor tugas"] for task in tasks) + 1
+    return max(task["Nomor Tugas"] for task in tasks) + 1
 
 
 def tambah_tugas(title, deadline, priority):
@@ -24,3 +24,12 @@ def tambah_tugas(title, deadline, priority):
     tasks.append(tugas_baru)
     save_tasks(tasks)
     return tugas_baru
+
+def edit_task(nomor_task, new_data):
+    """Edit berdasarkan nomor tugas"""
+    for task in tasks:
+        if task["Nomor Tugas"] == nomor_task:
+            task.update(new_data)
+            save_tasks(tasks)
+            return True
+        return False
