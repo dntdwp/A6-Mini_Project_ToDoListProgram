@@ -1,6 +1,6 @@
 #task_manager.py
 
-from database import load_tasks, save_tasks
+from database import load_tasks, simpanTask
 
 tasks = load_tasks()
 
@@ -17,12 +17,12 @@ def tambah_tugas(title, deadline, priority):
         "Nomor Tugas":no_tugas(),
         "Title": title,
         "Deadline": deadline,
-        "Priority (easy, medium, hard)": priority,
+        "Priority": priority,
         "Status": "Belum"
     }
 
     tasks.append(tugas_baru)
-    save_tasks(tasks)
+    simpanTask(tasks)
     return tugas_baru
 
 def edit_task(nomor_task, new_data):
