@@ -92,12 +92,3 @@ def export_report(tasks, filename="report_todolist.txt"):
     with open(filepath, "w", encoding="utf-8") as f:
         f.write(report + "\n")
     return filepath
-
-
-# 4️⃣ Hitung persentase penyelesaian
-def get_completion_percentage(tasks):
-    if len(tasks) == 0:
-        return 0
-
-    completed, _ = get_summary(tasks)
-    return (completed / len(tasks)) * 100
