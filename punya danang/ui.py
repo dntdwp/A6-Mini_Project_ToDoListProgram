@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import messagebox, simpledialog
+from tkinter import messagebox, simpledialog, filedialog
 import sys
 import os
 
@@ -35,6 +35,7 @@ class TodoApp(tk.Tk):
 
         self._build_header()
         self._build_input_area()
+        self._build_report_bar()
         self._build_task_list()
         self._build_footer()
         self._refresh_list()
@@ -97,6 +98,33 @@ class TodoApp(tk.Tk):
             "<MouseWheel>", lambda e: self.canvas.yview_scroll(-int(e.delta / 120), "units")
         )
 
+    # ── Report button bar ───────────────────────────────────────
+    def _build_report_bar(self):
+        bar = tk.Frame(self, bg=BG, pady=4, padx=20)
+        bar.pack(fill=tk.X)
+
+        report_btn = tk.Button(
+            bar, text="📊 Report", font=("Segoe UI", 10, "bold"),
+            bg=SURFACE, fg=YELLOW, activebackground=ACCENT_HOVER,
+            relief=tk.FLAT, padx=12, pady=4, cursor="hand2",
+            command=self._show_report,
+        )
+        report_btn.pack(side=tk.LEFT)
+
+        export_btn = tk.Button(
+            bar, text="💾 Export", font=("Segoe UI", 10, "bold"),
+            bg=SURFACE, fg=GREEN, activebackground=ACCENT_HOVER,
+            relief=tk.FLAT, padx=12, pady=4, cursor="hand2",
+            command=self._export_report,
+        )
+        export_btn.pack(side=tk.LEFT, padx=(8, 0))
+
+        # Progress bar label (right-aligned)
+        self.progress_lbl = tk.Label(
+            bar, font=("Consolas", 9), bg=BG, fg=ACCENT, anchor=tk.E,
+        )
+        self.progress_lbl.pack(side=tk.RIGHT)
+
     # ── Footer with stats ───────────────────────────────────────
     def _build_footer(self):
         self.footer = tk.Label(
@@ -130,6 +158,38 @@ class TodoApp(tk.Tk):
             self.tasks = todo.edit_task(self.tasks, task_id, new_title)
             self._refresh_list()
 
+    def _show_report(self):
+        """Show a popup window with the task report."""
+        report_text = todo.get_report_text(self.tasks)
+
+        win = tk.Toplevel(self)
+        win.title("📊  Task Report")
+        win.geometry("420x320")
+        win.configure(bg=BG)
+        win.resizable(False, False)
+
+        txt = tk.Text(
+            win, font=("Consolas", 10), bg=SURFACE, fg=TEXT,
+            relief=tk.FLAT, bd=12, wrap=tk.WORD,
+        )
+        txt.insert(tk.END, report_text)
+        txt.configure(state=tk.DISABLED)
+        txt.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        tk.Button(
+            win, text="Close", font=("Segoe UI", 10, "bold"),
+            bg=ACCENT, fg="#11111b", relief=tk.FLAT, padx=16, pady=4,
+            cursor="hand2", command=win.destroy,
+        ).pack(pady=(0, 10))
+
+    def _export_report(self):
+        """Export the report to a .txt file."""
+        try:
+            filepath = todo.export_report(self.tasks)
+            messagebox.showinfo("Export Berhasil", f"Report disimpan di:\n{filepath}")
+        except Exception as e:
+            messagebox.showerror("Export Gagal", f"Terjadi error:\n{e}")
+
     # ── Refresh the displayed list ──────────────────────────────
     def _refresh_list(self):
         # Clear existing widgets
@@ -149,6 +209,9 @@ class TodoApp(tk.Tk):
         total = len(self.tasks)
         done = sum(1 for t in self.tasks if t["completed"])
         self.footer.config(text=f"  {done} / {total} tasks completed")
+
+        # Update progress bar
+        self.progress_lbl.config(text=todo.get_progress_bar(self.tasks))
 
     def _create_task_row(self, task):
         row = tk.Frame(self.scrollable, bg=SURFACE, pady=6, padx=10)
