@@ -60,4 +60,3 @@ def auto_backup():
         shutil.copy(DB_FILE, backup_name)
         return backup_name
     return None
-
