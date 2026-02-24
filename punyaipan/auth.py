@@ -3,7 +3,7 @@ import json
 import hashlib
 
 # user.json akan disimpan di folder project root
-USERS_FILE = Path(__file__).resolve().parent.parent / "user.json"
+USERS_FILE = Path(__file__).resolve().parent / "user.json"
 
 
 def load_users():
@@ -40,18 +40,18 @@ def register_user(username: str, password: str):
 
 	users = load_users()
 	if username in users:
-		return False, "Username sudah terdaftar"
+		return False, "Username sudah terdaftar, coba pikirkan yang lain"
 
 	users[username] = {"password": _hash_password(password)}
 	save_users(users)
-	return True, "Registrasi berhasil"
+	return True, "Selamat Anda Berhasil Registrasi, silahkan login untuk melanjutkan"
 
 
 def login_user(username: str, password: str):
 	users = load_users()
 	if username not in users:
-		return False, "Username tidak ditemukan"
+		return False, "Username anda tidak ditemukan"
 	if users[username].get("password") != _hash_password(password):
-		return False, "Password salah"
-	return True, "Login berhasil"
+		return False, "Password yang anda masukkan salah"
+	return True, "Selamat Anda Berhasil Login"
 
