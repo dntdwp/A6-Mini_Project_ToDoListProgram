@@ -1,5 +1,11 @@
 import importlib.util
 import os
+import sys
+
+# Tambahkan folder modul ke sys.path agar bisa di-import
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "punyafathimah"))
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)), "punyadava"))
+
 import taskmanager
 
 
@@ -7,20 +13,20 @@ def load_tasks():
     return taskmanager.get_all_tasks()
 
 
-def add_task(title, deadline, priority):
-    return taskmanager.tambah_tugas(title, deadline, priority)
+def add_task(tasks, title):
+    return taskmanager.tambah_tugas(tasks, title)
 
 
-def edit_task(nomor_task, new_data):
-    return taskmanager.edit_task(nomor_task, new_data)
+def toggle_task(tasks, task_id):
+    return taskmanager.mark_done(tasks, task_id)
 
 
-def delete_task(nomor_task):
-    return taskmanager.hapus_task(nomor_task)
+def edit_task(tasks, task_id, new_title):
+    return taskmanager.edit_task(tasks, task_id, new_title)
 
 
-def mark_done(nomor_task):
-    return taskmanager.mark_done(nomor_task)
+def delete_task(tasks, task_id):
+    return taskmanager.hapus_task(tasks, task_id)
 
 
 if __name__ == "__main__":

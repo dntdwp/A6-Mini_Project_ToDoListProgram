@@ -3,9 +3,10 @@ import os
 import shutil
 from datetime import datetime
 
-# Konfigurasi nama file
-DB_FILE = "tasks.json"
-BACKUP_FILE = "tasks_backup.json"
+# Konfigurasi nama file — gunakan path absolut relatif terhadap project root
+_PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+DB_FILE = os.path.join(_PROJECT_ROOT, "tasks.json")
+BACKUP_FILE = os.path.join(_PROJECT_ROOT, "tasks_backup.json")
 
 def load_tasks():
     """Membaca semua data tugas dari file JSON."""

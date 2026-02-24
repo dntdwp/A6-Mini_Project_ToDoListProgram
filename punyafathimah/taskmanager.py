@@ -1,61 +1,60 @@
 #task_manager.py
 
-from database import load_tasks, simpan_task
+import sys
+import os
 
-tasks = load_tasks()
+# Tambahkan folder punyadava ke path agar bisa import database
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "punyadava"))
 
-def no_tugas():
-    """Beri nomor untuk setiap tugas"""
+from database import load_tasks, save_tasks
+
+
+def _generate_id(tasks):
+    """Beri nomor ID unik untuk setiap tugas baru."""
     if not tasks:
         return 1
-    return max(task["Nomor Tugas"] for task in tasks) + 1
+    return max(t["id"] for t in tasks) + 1
 
 
-def tambah_tugas(title, deadline, priority):
-    """Menambahkan tugas baru"""
+def tambah_tugas(tasks, title):
+    """Menambahkan tugas baru ke list dan simpan ke database."""
     tugas_baru = {
-        "Nomor Tugas":no_tugas(),
-        "Title": title,
-        "Deadline": deadline,
-        "Priority": priority,
-        "Status": "Belum"
+        "id": _generate_id(tasks),
+        "title": title,
+        "completed": False,
     }
-
     tasks.append(tugas_baru)
-    simpan_task(tasks)
-    return tugas_baru
+    save_tasks(tasks)
+    return tasks
 
-def edit_task(nomor_task, new_data):
-    """Edit berdasarkan Nomor Tugas"""
+
+def edit_task(tasks, task_id, new_title):
+    """Edit judul tugas berdasarkan ID."""
     for task in tasks:
-        if task["Nomor Tugas"] == nomor_task:
-            task.update(new_data)
-            simpan_task(tasks)
-            return True
-    return False
-    
-def hapus_task(nomor_task):
-    """Hapus berdasarkan Nomor Tugas"""
-    global tasks
-    panjang = len(tasks)
-    tasks = [task for task in tasks if task["Nomor Tugas"] != nomor_task]
-    
-    if len(tasks) < panjang:
-        simpan_task(tasks)
-        return True
-    return False
+        if task["id"] == task_id:
+            task["title"] = new_title
+            break
+    save_tasks(tasks)
+    return tasks
 
 
-def mark_done(nomor_task):
-    """Tandai tugas selesai"""
+def hapus_task(tasks, task_id):
+    """Hapus tugas berdasarkan ID."""
+    tasks = [t for t in tasks if t["id"] != task_id]
+    save_tasks(tasks)
+    return tasks
+
+
+def mark_done(tasks, task_id):
+    """Toggle status selesai/belum pada tugas."""
     for task in tasks:
-        if task["Nomor Tugas"] == nomor_task:
-            task["Status"] = "Selesai"
-            simpan_task(tasks)
-            return True
-    return False
+        if task["id"] == task_id:
+            task["completed"] = not task["completed"]
+            break
+    save_tasks(tasks)
+    return tasks
 
 
 def get_all_tasks():
-    """Mengembalikan semua tugas"""
-    return tasks
+    """Mengembalikan semua tugas dari database."""
+    return load_tasks()
