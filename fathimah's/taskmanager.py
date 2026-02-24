@@ -1,6 +1,6 @@
 #task_manager.py
 
-from database import load_tasks, simpanTask
+from database import load_tasks, simpan_task
 
 tasks = load_tasks()
 
@@ -22,7 +22,7 @@ def tambah_tugas(title, deadline, priority):
     }
 
     tasks.append(tugas_baru)
-    simpanTask(tasks)
+    simpan_task(tasks)
     return tugas_baru
 
 def edit_task(nomor_task, new_data):
@@ -30,7 +30,7 @@ def edit_task(nomor_task, new_data):
     for task in tasks:
         if task["Nomor Tugas"] == nomor_task:
             task.update(new_data)
-            save_tasks(tasks)
+            simpan_task(tasks)
             return True
     return False
     
@@ -38,7 +38,7 @@ def delete_task(nomor_task):
     """Hapus berdasarkan Nomor Tugas"""
     global tasks
     tasks = [task for task in tasks if task["Nomor Tugas"] != nomor_task]
-    save_tasks(tasks)
+    simpan_task(tasks)
     return True
 
 
@@ -47,7 +47,7 @@ def mark_done(nomor_task):
     for task in tasks:
         if task["Nomor Tugas"] == nomor_task:
             task["Status"] = "Selesai"
-            save_tasks(tasks)
+            simpan_task(tasks)
             return True
     return False
 
