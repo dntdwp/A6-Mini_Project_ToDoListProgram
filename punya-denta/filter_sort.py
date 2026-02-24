@@ -1,35 +1,16 @@
 from datetime import datetime
 
 def filter_by_status(tasks, status):
-    filtered = []
-    for task in tasks:
-        task_status = task.get('status', '').lower()
-        if task_status == status.lower():
-            filtered.append(task)
-    return filtered
+    target_status = status.lower()
+    return [task for task in tasks if task.get('status', '').lower() == target_status]
 
 def filter_by_priority(tasks, priority):
-    filtered = []
-    for task in tasks:
-        task_priority = task.get('prioritas', '').lower()
-        if task_priority == priority.lower():
-            filtered.append(task)
-    return filtered
+    target_priority = priority.lower()
+    return [task for task in tasks if task.get('prioritas', '').lower() == target_priority]
 
 def sort_by_deadline(tasks):
-    def get_date(task):
-        try:
-            return datetime.strptime(task['deadline'], "%Y-%m-%d")
-        except ValueError:
-            return datetime.max
-    return sorted(tasks, key=get_date)
+    return sorted(tasks, key=lambda task: task.get('deadline', '9999-99-99'))
 
 def search_task(tasks, keyword):
-    results = []
-    keyword = keyword.lower()
-    
-    for task in tasks:
-        title = task.get('judul', '').lower()
-        if keyword in title:
-            results.append(task)
-    return results
+    target_keyword = keyword.lower()
+    return [task for task in tasks if target_keyword in task.get('judul', '').lower()]
