@@ -63,8 +63,10 @@ def edit_task(tasks, task_id, new_title):
 
 
 # ── Import & launch UI ─────────────────────────────────────────
-# Import ui.py from "punya danang" folder (space in name requires importlib)
-ui_path = os.path.join(os.path.dirname(__file__), "punya danang", "ui.py")
-spec = importlib.util.spec_from_file_location("ui", ui_path)
-ui = importlib.util.module_from_spec(spec)
-spec.loader.exec_module(ui)
+if __name__ == "__main__":
+    # Import ui.py from "punya danang" folder (space in name requires importlib)
+    ui_path = os.path.join(os.path.dirname(__file__), "punya danang", "ui.py")
+    spec = importlib.util.spec_from_file_location("ui", ui_path)
+    ui = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(ui)
+    ui.run()
