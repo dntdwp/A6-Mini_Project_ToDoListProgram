@@ -11,7 +11,7 @@ def filter_by_status(tasks, status):
 def filter_by_priority(tasks, priority):
     filtered = []
     for task in tasks:
-        task_priority = task.get('prioritas', '').lower() # Sesuaikan key dengan data ('prioritas'/'priority')
+        task_priority = task.get('prioritas', '').lower()
         if task_priority == priority.lower():
             filtered.append(task)
     return filtered
