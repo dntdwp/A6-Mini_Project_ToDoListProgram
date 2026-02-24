@@ -37,9 +37,13 @@ def edit_task(nomor_task, new_data):
 def delete_task(nomor_task):
     """Hapus berdasarkan Nomor Tugas"""
     global tasks
+    panjang = len(tasks)
     tasks = [task for task in tasks if task["Nomor Tugas"] != nomor_task]
-    simpan_task(tasks)
-    return True
+    
+    if len(tasks) < panjang:
+        simpan_task(tasks)
+        return True
+    return False
 
 
 def mark_done(nomor_task):
